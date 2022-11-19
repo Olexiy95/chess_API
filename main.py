@@ -5,6 +5,4 @@ import chess
 
 board = chess.Board()
 
-print(board)
-
 moves = board.legal_moves
