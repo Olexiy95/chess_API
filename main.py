@@ -1,7 +1,10 @@
 from function_defs import *
+import chess
 
 # Do things here
 
-dog = get_daily_games("Olexiy95")
+board = chess.Board()
 
-jprint(dog)
+print(board)
+
+moves = board.legal_moves
