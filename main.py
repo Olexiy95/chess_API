@@ -1,13 +1,7 @@
-import requests
-import json
+from function_defs import *
 
-def jprint(obj):
-    text = json.dumps(obj, sort_keys=True, indent=4)
-    print(text)
+# Do things here
 
-r = requests.get(" https://api.chess.com/pub/player/Olexiy95")
+dog = get_daily_games("Olexiy95")
 
-rr = r.json()
-
-jprint(rr)
-
+jprint(dog)
