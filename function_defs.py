@@ -5,194 +5,112 @@ import json
 Function definitions for different available endpoins.
 """
 
-baseUrl = "https://api.chess.com/pub/"
 
-def jprint(obj):
-    text = json.dumps(obj, sort_keys=True, indent=4)
-    print(text)
+class ChessAPI:
+    def __init__(self):
+        self.base_url = "https://api.chess.com/pub/"
+        self.headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        }
 
-def template(parameter):
-    endpointUrl = ""
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_profile(self, username):
+        return self.get(f"player/{username}")
 
-def get_profile(username):
-    endpointUrl = "player/{}".format(username)
-    requestUrl = baseUrl + endpointUrl
-    request = requests.get(requestUrl)
-    return request.json()
+    def get_stats(self, username):
+        return self.get(f"player/{username}/stats")
 
-def get_stats(username):
-    endpointUrl = "player/{}/stats".format(username)
-    requestUrl = baseUrl + endpointUrl
-    request = requests.get(requestUrl)
-    return request.json()
+    def get_titled_players(self, title):
+        """
+        Valid title abbreviations are:
+        GM, WGM, IM, WIM, FM, WFM, NM, WNM, CM, WCM.
+        """
+        return self.get(f"titled/{title}")
 
+    def get_online_status(self, username):
+        return self.get(f"player/{username}/is-online")
 
-def get_titled_players(title):
-    """
-    Valid title abbreviations are: 
-    GM, WGM, IM, WIM, FM, WFM, NM, WNM, CM, WCM.
-    """
-    endpointUrl = "titled/{}".format(title)
-    requestUrl = baseUrl + endpointUrl
-    request = requests.get(requestUrl)
-    return request.json()
+    def get_daily_games(self, username, to_move_flag: bool = False):
+        if to_move_flag == False:
+            return self.get(f"player/{username}/games")
+        elif to_move_flag == True:
+            return self.get(f"player/{username}/games/to-move")
 
+    def get_game_archives(self, username):
+        return self.get(f"player/{username}/games/archives")
 
-def get_online_status(username):
-    endpointUrl = "player/{}/is-online".format(username)
-    requestUrl = baseUrl + endpointUrl
-    request = requests.get(requestUrl)
-    return request.json()
+    def get_finished_games(self, username, MM, YYYY):
+        return self.get(f"player/{username}/games/{YYYY}/{MM}")
 
-def get_daily_games(username, to_move_flag):
-    if to_move_flag == False:
-        endpointUrl = "player/{}/games".format(username)
-    elif to_move_flag == True:
-        endpointUrl = "player/{}/games/to-move".format(username)
-    requestUrl = baseUrl + endpointUrl
-    request = requests.get(requestUrl)
-    return request.json()
+    def get_finished_games_pgn(self, username, MM, YYYY):
+        return self.get(f"player/{username}/games/{YYYY}/{MM}/pgn")
 
-def get_game_archives(username):
-    endpointUrl = "player/{}/games/archives".format(username)
-    requestUrl = baseUrl + endpointUrl
-    request = requests.get(requestUrl)
-    return request.json()
+    def get_player_clubs(self, username):
+        return self.get(f"player/{username}/clubs")
 
-def get_finished_games(username, MM, YYYY):
-    endpointUrl = "player/{}/games/{}/{}".format(username, YYYY, MM)
-    requestUrl = baseUrl + endpointUrl
-    request = requests.get(requestUrl)
-    return request.json()
+    def get_team_matches(self, username):
+        return self.get(f"player/{username}/matches")
 
-def get_finished_games_pgn(username, MM, YYYY):
-    endpointUrl = "player/{username}/games/{YYYY}/{MM}/pgn".format(username,YYYY, MM)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.content()
+    def get_tournaments(self, username):
+        return self.get(f"player/{username}/tournaments")
 
-def get_player_clubs(username):
-    endpointUrl = "player/{}/clubs".format(username)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_club(self, club_url):
+        return self.get(f"club/{club_url}")
 
-def get_team_matches(username):
-    endpointUrl = "player/{}/matches".format(username)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_club_members(self, club_url):
+        return self.get(f"club/{club_url}/members")
 
-def get_tournaments(username):
-    endpointUrl = "player/{}/tournaments".format(username)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_club_matches(self, club_url):
+        return self.get(f"club/{club_url}/matches")
 
-def get_club(club_url):
-    endpointUrl = "club/{}".format(club_url)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_tournament(self, tournament_url):
+        return self.get(f"tournament/{tournament_url}")
 
-def get_club_members(club_url):
-    endpointUrl = "club/{}/members".format(club_url)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_tournament_round(self, tournament_url, round):
+        return self.get(f"tournament/{tournament_url}/{round}")
 
-def get_club_matches(club_url):
-    endpointUrl = "club/{}/matches".format(club_url)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_tournament_round_group(self, tournament_url, round, group):
+        return self.get(f"tournament/{tournament_url}/{round}/{group}")
 
-def get_tournament(tournament_url):
-    endpointUrl = "tournament/{}".format(tournament_url)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_match(self, match_id):
+        return self.get(f"match/{match_id}")
 
-def get_tournament_round(tournament_url, round):
-    endpointUrl = "tournament/{}/{}".format(tournament_url, round)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_match_board(self, match_id, board):
+        return self.get(f"match/{match_id}/{board}")
 
-def get_tournament_round_group(tournament_url, round, group):
-    endpointUrl = "tournament/{}/{}/{}".format(tournament_url, round, group)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_live_match(self, live_id):
+        return self.get(f"match/live/{live_id}")
 
-def get_match(match_id):
-    endpointUrl = "match/{}".format(match_id)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_live_match_board(self, live_id, board):
+        return self.get(f"match/live/{live_id}/{board}")
 
-def get_match_board(match_id, board):
-    endpointUrl = "match/{}/{}".format(match_id, board)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_country(self, country_iso):
+        """https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"""
+        return self.get(f"country/{country_iso}")
 
-def get_live_match(live_id):
-    endpointUrl = "match/live/{}".format(live_id)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_country_players(self, country_iso):
+        """https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"""
+        return self.get(f"country/{country_iso}/players")
 
-def get_live_match_board(live_id, board):
-    endpointUrl = "match/live/{}/{}".format(live_id, board)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_country_clubs(self, country_iso):
+        """https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"""
+        return self.get(f"country/{country_iso}/clubs")
 
-def get_country(country_iso):
-    # https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-    endpointUrl = "country/{}".format(country_iso)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_puzzle(self):
+        return self.get("puzzle")
 
-def get_country_players(country_iso):
-    # https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-    endpointUrl = "country/{}/players".format(country_iso)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_random_puzzle(self):
+        return self.get("puzzle/random")
 
-def get_country_clubs(country_iso):
-    # https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-    endpointUrl = "country/{}/clubs".format(country_iso)
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_streamers(self):
+        return self.get("streamers")
 
-def get_puzzle():
-    endpointUrl = "puzzle"
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get_leadeboards(self):
+        return self.get("leaderboards")
 
-def get_random_puzzle():
-    endpointUrl = "puzzle/random"
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
-
-def get_streamers():
-    endpointUrl = "streamers"
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
-
-def get_leadeboards():
-    endpointUrl = "leaderboards"
-    requestUrl = baseUrl + endpointUrl
-    request = request.get(requestUrl)
-    return request.json()
+    def get(self, endpoint: str):
+        response = requests.get(f"{self.base_url}/{endpoint}", headers=self.headers)
+        if response.status_code not in (200, 201):
+            print(response.text)
+        response.raise_for_status()
+        return response.json()
