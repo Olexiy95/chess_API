@@ -1,4 +1,4 @@
-# Chess API
+# Chess Analyser
 
 Scripts for leveraging chess.com API endpoints with python chess library. 
 
